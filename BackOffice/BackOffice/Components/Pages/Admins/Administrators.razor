@@ -1,0 +1,44 @@
+﻿@page "/admins"
+@inject AdminService AdminService
+
+@using BackOffice.Components.Services
+@using BackOffice.Data
+@using Microsoft.AspNetCore.Authorization
+
+
+<PageTitle>Administrators</PageTitle>
+
+<h1>Administrators</h1>
+
+<a href="/admin/users" class="btn btn-primary mb-5">Update Admin</a>
+
+@if (admins == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!admins.Any())
+{
+    <p>No administrators found.</p>
+}
+else
+{
+    @foreach (var admin in admins)
+    {
+        <div>
+            <p class="fw-bold">Email: @admin.Email</p>
+            <p>Id: @admin.Id</p>
+
+            <hr />
+        </div>
+    }
+}
+
+@code {
+    private List<ApplicationUser>? admins;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        admins = await AdminService.GetAdministratorsAsync();
+    }
+}

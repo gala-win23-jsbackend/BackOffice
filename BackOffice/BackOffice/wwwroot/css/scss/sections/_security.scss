@@ -1,0 +1,187 @@
+#security {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    @include lg {
+        display: grid;
+        grid-template-columns: 2fr 5fr;
+        gap: 150px;
+        margin-bottom: 70px;
+        flex-direction: row;
+        justify-content: normal;
+        align-items: normal;
+    }
+
+
+    aside {
+        @include lg {
+            border-right: 1px solid var(--gray-300);
+            padding-right: 20px;
+        }
+
+        .security-profile {
+            margin: 20px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+
+            .profile-info-img {
+                position: relative;
+                z-index: 1;
+                height: 120px;
+                width: 120px;
+
+
+                img {
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .fa-arrows-rotate {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    background-color: $gray-700;
+                    color: $white;
+                    z-index: 2;
+                    border-radius: 50%;
+                    padding: 0.5rem;
+                }
+            }
+
+            h5 {
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+
+            p {
+                @include text-m;
+            }
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 50px;
+            text-align: center;
+
+            a {
+                display: block;
+                margin-top: 10px;
+                text-align: left;
+                font-size: 17px;
+                font-weight: 600;
+
+                &:hover {
+                    color: $white !important;
+
+                    i {
+                        color: $white !important;
+                    }
+                }
+
+                i {
+                    color: $gray-700;
+                    padding-right: 10px;
+
+                    &:hover {
+                        color: $white !important;
+                    }
+
+                    &.fa-solid.fa-gear.fa-creative-commons.fa-bookmark {
+                        color: $white;
+                    }
+                }
+            }
+
+            .btn-theme-s {
+                display: block;
+                text-align: left;
+
+                i {
+                    color: $white;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+
+    .security-form {
+        margin-top: 50px;
+        width: 100%;
+
+        .security-info {
+            form {
+                padding: 1rem;
+
+                h5 {
+                    color: $theme;
+                }
+
+                .content {
+                    display: grid;
+                    gap: 1rem 2rem;
+                    grid-template-columns: 1fr;
+                    grid-template-areas: "current-password" "new-password" "confirm-new-password" "buttons";
+
+                    @include lg {
+                        grid-template-columns: 1fr 1fr;
+                        grid-template-areas: "current-password current-password" "new-password confirm-new-password" "buttons buttons";
+                    }
+
+                    #current-password {
+                        grid-area: current-password;
+                    }
+
+                    #new-password {
+                        grid-area: new-password;
+                    }
+
+                    #confirm-new-passwordl {
+                        grid-area: confirm-new-password;
+                    }
+
+                    .form-buttons {
+                        grid-area: buttons;
+                        margin: 20px 0;
+                        display: flex;
+                        gap: 20px;
+
+                        .btn-gray {
+                            background-color: $gray-700;
+
+                            &:hover {
+                                background-color: $theme;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        .delete-account {
+            margin-top: 30px;
+
+            form {
+                padding: 1rem;
+
+                h5 {
+                    color: $theme;
+                }
+
+                .content {
+                    display: grid;
+                    gap: 1rem;
+                }
+            }
+        }
+    }
+}

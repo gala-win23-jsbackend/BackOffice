@@ -1,0 +1,317 @@
+﻿@page "/admin/users"
+
+@using Microsoft.AspNetCore.Identity
+@using BackOffice.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "SuperAdmin")]
+
+<PageTitle>Admin - User Management</PageTitle>
+
+<h1>User Management</h1>
+
+    @if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert @(isSuccess ? "alert-success" : "alert-danger")" role="alert">
+        @Message
+    </div>
+}
+
+@if (loading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@string.Join(", ", user.Roles)</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ShowEditUser(user.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(user.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h2>Create New Admin</h2>
+
+<EditForm Model="newUser" OnValidSubmit="CreateNewUser">
+    <div class="form-group">
+        <label>Email</label>
+        <InputText @bind-Value="newUser.Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <InputText @bind-Value="newUser.Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Create</button>
+</EditForm>
+
+@if (editUser != null)
+{
+    <EditForm Model="editUser" OnValidSubmit="SaveUser">
+        <div class="form-group">
+            <label>Email</label>
+            <InputText @bind-Value="editUser.Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Roles</label>
+            @foreach (var role in editUser.Roles)
+            {
+                <div class="form-check mb-5">
+                    <InputCheckbox @bind-Value="role.IsSelected" class="form-check-input" />
+                    <label class="form-check-label">@role.Name</label>
+                </div>
+            }
+        </div>
+        <button type="submit" class="btn btn-success mb-3">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    public List<UserViewModel> users;
+    public List<RoleViewModel> allRoles;
+    public EditUserModel editUser;
+    public NewUserModel newUser = new NewUserModel();
+    public bool loading = true;
+    private bool isSuccess;
+    private string Message;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+        await LoadRoles();
+        loading = false;
+    }
+
+    public async Task LoadUsers()
+    {
+        var userList = await UserManager.Users.ToListAsync();
+        users = new List<UserViewModel>();
+        foreach (var user in userList)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            users.Add(new UserViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Roles = roles
+                });
+        }
+    }
+
+    public async Task LoadRoles()
+    {
+        var roles = await RoleManager.Roles.ToListAsync();
+        allRoles = roles.Select(r => new RoleViewModel { Name = r.Name }).ToList();
+
+        if (!allRoles.Any(r => r.Name == "SuperAdmin"))
+        {
+            allRoles.Add(new RoleViewModel { Name = "SuperAdmin" });
+        }
+
+        if (!allRoles.Any(r => r.Name == "Admin"))
+        {
+            allRoles.Add(new RoleViewModel { Name = "Admin" });
+        }
+    }
+
+
+    public async Task EnsureRoleExists(string roleName)
+    {
+        var roleExists = await RoleManager.RoleExistsAsync(roleName);
+        if (!roleExists)
+        {
+            var roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+            if (!roleResult.Succeeded)
+            {
+                Message = $"Error creating role: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}";
+                isSuccess = false;
+                return;
+            }
+        }
+    }
+
+    public async Task CreateUserWithRoleAdmin(string email, string password)
+    {
+        var user = new ApplicationUser { UserName = email, Email = email };
+        var result = await UserManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await EnsureRoleExists("Admin");
+            await UserManager.AddToRoleAsync(user, "Admin");
+        }
+        else
+        {
+            Message = $"Error creating adminuser: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            isSuccess = false;
+        }
+    }
+
+    public async Task CreateUserWithRoleSuperAdmin(string email, string password)
+    {
+        var user = new ApplicationUser { UserName = email, Email = email };
+        var result = await UserManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await EnsureRoleExists("SuperAdmin");
+            await UserManager.AddToRoleAsync(user, "SuperAdmin");
+            Message = "User created successfully.";
+            isSuccess = true;
+        }
+        else
+        {
+            Message = $"Error creating superadminuser: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            isSuccess = false;
+        }
+    }
+
+
+    public async Task CreateNewUser()
+    {
+        try
+        {
+            await CreateUserWithRoleSuperAdmin(newUser.Email, newUser.Password);
+            newUser = new NewUserModel();
+            await LoadUsers();
+        }
+        catch (Exception ex)
+        {
+            Message = $"Error creating user: {ex.Message}";
+            isSuccess = false;
+        }
+    }
+
+    public async Task ShowEditUser(string userId)
+    {
+        Console.WriteLine($"Editing user with ID: {userId}");
+        var user = await UserManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            Console.WriteLine("User not found");
+            return;
+        }
+        var userRoles = await UserManager.GetRolesAsync(user);
+        editUser = new EditUserModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Roles = allRoles.Select(r => new RoleViewModel
+                {
+                    Name = r.Name,
+                    IsSelected = userRoles.Contains(r.Name)
+                }).ToList()
+            };
+        StateHasChanged();
+    }
+
+    public async Task SaveUser()
+    {
+        var user = await UserManager.FindByIdAsync(editUser.Id);
+        if (user == null)
+        {
+            Console.WriteLine($"User with ID {editUser.Id} not found.");
+            return;
+        }
+
+        user.Email = editUser.Email;
+        var result = await UserManager.UpdateAsync(user);
+        if (result.Succeeded)
+        {
+            var currentRoles = await UserManager.GetRolesAsync(user);
+            var selectedRoles = editUser.Roles.Where(r => r.IsSelected).Select(r => r.Name).ToList();
+
+            var rolesToAdd = selectedRoles.Except(currentRoles).ToList();
+            var rolesToRemove = currentRoles.Except(selectedRoles).ToList();
+
+            foreach (var role in rolesToAdd)
+            {
+                await EnsureRoleExists(role);
+            }
+
+            if (rolesToAdd.Any())
+            {
+                var addResult = await UserManager.AddToRolesAsync(user, rolesToAdd);
+                if (!addResult.Succeeded)
+                {
+                    Console.WriteLine($"Error adding roles: {string.Join(", ", addResult.Errors.Select(e => e.Description))}");
+                }
+            }
+
+            if (rolesToRemove.Any())
+            {
+                var removeResult = await UserManager.RemoveFromRolesAsync(user, rolesToRemove);
+                if (!removeResult.Succeeded)
+                {
+                    Console.WriteLine($"Error removing roles: {string.Join(", ", removeResult.Errors.Select(e => e.Description))}");
+                }
+            }
+
+            await LoadUsers();
+            editUser = null;
+        }
+        else
+        {
+            Console.WriteLine($"Error updating user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+
+    public void CancelEdit()
+    {
+        editUser = null;
+    }
+
+    public async Task DeleteUser(string userId)
+    {
+        var user = await UserManager.FindByIdAsync(userId);
+        await UserManager.DeleteAsync(user);
+        await LoadUsers();
+    }
+
+    public class UserViewModel
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public IList<string> Roles { get; set; }
+    }
+
+    public class RoleViewModel
+    {
+        public string Name { get; set; }
+        public bool IsSelected { get; set; }
+    }
+
+    public class EditUserModel
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public List<RoleViewModel> Roles { get; set; }
+    }
+
+    public class NewUserModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}
