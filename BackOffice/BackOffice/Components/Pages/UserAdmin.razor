@@ -1,0 +1,115 @@
+﻿@page "/useradmin"
+@layout BackOffice.Components.Layout.MainLayout
+@using BackOffice.Data
+@using BackOffice.Models
+@inject HttpClient Http
+
+@rendermode InteractiveServer
+
+@attribute [StreamRendering]
+
+<h3>UserAdmin</h3>
+
+<section class="useradmin">
+    <div class="container">
+        @if (!String.IsNullOrEmpty(StatusMessage))
+        {
+            <p>@StatusMessage</p>
+        }
+
+        @if (users != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in users)
+                    {
+                        userId = new UserId { Id = user.Id };
+                        var linkUpdate = $"/updateuser/{user.Id}";
+                        <tr>
+                            <td>@user.FirstName @user.LastName</td>
+                            <td>@user.Email</td>
+                            @if (user.Roles == null || !user.Roles.Any())
+                            {
+                                <td>No current roles added to this user</td>
+                            }
+                            else
+                            {
+                                var rolesString = string.Join(", ", user.Roles);
+                                <td>@rolesString</td>
+
+                            }
+
+                            <td>
+                                <a href="@linkUpdate"><button class="btn btn-theme">Update</button></a>
+                                <EditForm Model="userId" OnValidSubmit="@(() => Delete(userId))" novalidate>
+                                    <InputText type="hidden" @bind-Value="userId.Id" />
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </EditForm>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No users found</p>
+        }
+
+    </div>
+</section>
+
+
+@code {
+    private IEnumerable<UsersWithRoles> users = null!;
+
+    private string StatusMessage { get; set; } = null!;
+
+    public UserId userId = new UserId();
+
+    public class UserId
+    {
+        public string Id { get; set; } = null!;
+    }
+
+    public async Task Delete(UserId userId)
+    {
+        var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/DeleteUser", userId);
+        if (response.IsSuccessStatusCode)
+        {
+            StatusMessage = "User deleted";
+            await OnInitializedAsync();
+        }
+        else
+        {
+            StatusMessage = "User not deleted";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
+            if (response != null)
+            {
+                users = response;
+            }
+            else
+            {
+                StatusMessage = "No users found";
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"{ex.Message}";
+        }
+    }
+}

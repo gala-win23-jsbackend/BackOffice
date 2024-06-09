@@ -4,58 +4,52 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BackOffice</a>
+        <a class="navbar-brand" href="">BlazorBackOfficeCamilla</a>
     </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-
-
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-      
+        <div class="nav-item px-3">
+
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
 
         <AuthorizeView>
-            
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    <NavLink class="nav-link" href="Courseadmin">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Course Admin
                     </NavLink>
                 </div>
 
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="users">
-                        <span aria-hidden="true" class="bi bi-lock-nav-menu"></span> Registered Users
+                    <NavLink class="nav-link" href="Useradmin">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> User Admin
                     </NavLink>
                 </div>
 
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="admins">
-                        <span aria-hidden="true" class="bi bi-lock-nav-menu"></span> Admins
+                    <NavLink class="nav-link" href="Subscribeadmin">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Handle subscribers
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="ManageAdmin">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Manage Administrators
                     </NavLink>
                 </div>
 
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="chat">
-                        <span class="bi bi-chat-left-fill mb-4" aria-hidden="true"></span> Chat
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Chat
                     </NavLink>
                 </div>
-
-                
-            </Authorized>
-        </AuthorizeView>
-
-        <AuthorizeView>
-            <Authorized>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>  @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-
 
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
@@ -66,24 +60,24 @@
                         </button>
                     </form>
                 </div>
-
             </Authorized>
-                <NotAuthorized>
 
+
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Register">
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                    </NavLink>
+                </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
             </NotAuthorized>
-            
-
         </AuthorizeView>
 
 
-         
-           
-        
     </nav>
 </div>
 
@@ -108,5 +102,3 @@
     }
 }
 
-@* let myElement: HTMLElement = document.querySelector() as HTMLElement;
-myElement.click(); *@

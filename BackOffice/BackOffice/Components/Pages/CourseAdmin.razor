@@ -1,0 +1,131 @@
+﻿@page "/courseadmin"
+@using BackOffice.GraphQL
+@using BackOffice.Models
+@using BackOffice.Services
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject CourseService CourseService
+@inject NavigationManager NavigationManager
+
+
+<h3>CourseAdmin</h3>
+
+<section class="admincourse">
+    <div class="container">
+        <a href="create-course" class="btn btn-theme mb-5" aria-hidden="true"><h5>Create new Course</h5></a>
+        @if (!string.IsNullOrWhiteSpace(statusMessage))
+        {
+            <p>@statusMessage</p>
+        }
+        @if (courses == null)
+        {
+            <div><i class="fa-solid fa-spinner"></i></div>
+        }
+        else
+        {
+            @foreach (var course in courses)
+            {
+                var link = $"/update-course/{course.Id}";
+                <div> <img class="course-image" src="@course.ImageUri" /></div>
+
+                <div class="info">
+                    <h2 class="course-title">@course.Title</h2>
+                    <p class="course-creator">by @course.Author</p>
+                    <div class="course-prices">
+                        @if (course.DiscountPrice > 0)
+                        {
+                            <div class="discount-price">$@course.DiscountPrice</div>
+                            <div class="original-price discount">$@course.Price</div>
+                        }
+                        else
+                        {
+                            <div class="original-price">$@course.Price</div>
+                        }
+                    </div>
+
+                    <div class="course-footer">
+                        <a href="@link"><button class="btn btn-theme">Update</button></a>
+                        <button class="btn btn-red" @onclick="() => DeleteCourse(course.Id!)">Delete</button>
+                    </div>
+                </div>
+                <hr />
+            }
+        }
+    </div>
+</section>
+
+
+
+
+
+
+@*Get på alla kurser här, typ bara display en titel och pris? *@
+
+@code {
+    [SupplyParameterFromQuery]
+    private string statusMessage { get; set; } = "";
+
+    private List<CourseAdminCard>? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // courses = await CourseService.RequestCourseCardAdmin();
+        var query = new GraphQLQuery
+            {
+                Query = "{getCourses {id imageUri title authors{name} prices {price discount}}}"
+            };
+
+        var response = await Http.PostAsJsonAsync("https://courseprovider-silicon-gala.azurewebsites.net/api/graphql?code=HICWJNC7QYWfyyICw5z7E6Apvy-R_QAaGQEF6e_oahmfAzFuhgF5qQ%3D%3D", query);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
+            if (result?.Data.TryGetProperty("getCourses", out var coursesElement) == true)
+            {
+                courses = coursesElement.EnumerateArray().Select(course =>
+                {
+                    var courseModel = new CourseAdminCard();
+
+                    if (course.TryGetProperty("id", out var idElement))
+                    {
+                        courseModel.Id = idElement.GetString();
+                    }
+                    if (course.TryGetProperty("title", out var titleElement))
+                    {
+                        courseModel.Title = titleElement.GetString();
+                    }
+                    if (course.TryGetProperty("authors", out var authorsElement) && authorsElement.GetArrayLength() > 0)
+                    {
+                        courseModel.Author = authorsElement[0].GetProperty("name").GetString();
+                    }
+                    if (course.TryGetProperty("prices", out var pricesElement))
+                    {
+                        if (pricesElement.TryGetProperty("price", out var priceElement))
+                        {
+                            courseModel.Price = priceElement.GetDecimal();
+                        }
+                        if (pricesElement.TryGetProperty("discount", out var discountElement))
+                        {
+                            courseModel.DiscountPrice = discountElement.GetDecimal();
+                        }
+                    }
+                    if (course.TryGetProperty("imageUri", out var imageUriElement))
+                    {
+                        courseModel.ImageUri = imageUriElement.GetString();
+                    }
+                    return courseModel;
+                }).ToList();
+            }
+        }
+    }
+
+
+    private async Task DeleteCourse(string id)
+    {
+
+        var result = await CourseService.RequestDeleteCourseAsync(id);
+        if (result)
+            statusMessage = "Course deleted successfully";
+        StateHasChanged();
+    }
+}
