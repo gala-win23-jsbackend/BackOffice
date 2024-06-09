@@ -1,5 +1,6 @@
 ﻿@page "/Account/Login"
 
+@layout BackOffice.Components.Layout.MainLayout
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
@@ -11,8 +12,6 @@
 @inject IdentityRedirectManager RedirectManager
 @inject HttpClient Http
 
-
-<PageTitle>Log in</PageTitle>
 
 <h1>Log in</h1>
 <div class="row">
@@ -113,14 +112,15 @@
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; } = null!;
+        public string Password { get; set; } = "";
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }
 }
+
 
