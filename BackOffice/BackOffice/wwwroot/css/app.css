@@ -273,6 +273,10 @@ form textarea {
   grid-template-rows: auto 1fr auto;
 }
 
+.header-title {
+  text-align: center;
+}
+
 .btn-theme {
   border-radius: 6px;
   text-align: center;
@@ -323,28 +327,6 @@ form textarea {
   border: none;
 }
 .btn-red:hover {
-  text-decoration: none;
-  background-color: var(--color-gray-700);
-  color: var(--color-gray-000);
-}
-
-.btn-theme-s {
-  border-radius: 6px;
-  text-align: center;
-  font-size: 14px;
-  padding: 8px 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0px 8px 18px -8px rgba(99, 102, 241, 0.9);
-  background-color: var(--color-theme);
-  color: var(--color-white);
-  padding-top: 10px;
-  padding-bottom: 13px;
-}
-.btn-theme-s:hover {
-  box-shadow: 0px 8px 18px -8px rgba(19, 16, 34, 0.15);
   text-decoration: none;
   background-color: var(--color-gray-700);
   color: var(--color-gray-000);
@@ -509,6 +491,75 @@ a:hover {
 .more-link:hover i {
   background-color: var(--color-gray-800);
   color: var(--color-white);
+}
+
+.btn-theme-s {
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0px 8px 18px -8px rgba(99, 102, 241, 0.9);
+  background-color: var(--color-theme);
+  color: var(--color-white);
+  padding-top: 10px;
+  padding-bottom: 13px;
+  width: 100px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+.btn-theme-s:hover {
+  box-shadow: 0px 8px 18px -8px rgba(19, 16, 34, 0.15);
+  text-decoration: none;
+  background-color: var(--color-gray-700);
+  color: var(--color-gray-000);
+}
+
+.btn-red-s {
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background-color: #EF4444;
+  color: var(--color-white);
+  border: none;
+  width: 100px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+.btn-red-s:hover {
+  text-decoration: none;
+  background-color: var(--color-gray-700);
+  color: var(--color-gray-000);
+}
+
+.btn-gray {
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--color-gray-200);
+  color: var(--white);
+  border: none;
+  width: 100px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+.btn-gray:hover {
+  text-decoration: none;
+  background-color: var(--color-gray-700);
+  color: var(--color-gray-000);
 }
 
 .newsletter {

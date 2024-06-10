@@ -46,21 +46,7 @@
     }
 }
 
-.btn-theme-s {
-    @include button;
-    @include theme-shadow;
-    background-color: var(--color-theme);
-    color: var(--color-white);
-    padding-top: 10px;
-    padding-bottom: 13px;
 
-    &:hover {
-        @include theme-secondary-shadow;
-        text-decoration: none;
-        background-color: var(--color-gray-700);
-        color: var(--color-gray-000);
-    }
-}
 
 .btn-gray {
     @include button;
@@ -211,5 +197,56 @@ a {
             background-color: var(--color-gray-800);
             color: var(--color-white);
         }
+    }
+}
+
+
+.btn-theme-s {
+    @include button;
+    @include theme-shadow;
+    background-color: var(--color-theme);
+    color: var(--color-white);
+    padding-top: 10px;
+    padding-bottom: 13px;
+    width: 100px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+
+    &:hover {
+        @include theme-secondary-shadow;
+        text-decoration: none;
+        background-color: var(--color-gray-700);
+        color: var(--color-gray-000);
+    }
+}
+.btn-red-s {
+    @include button;
+    background-color: $danger;
+    color: var(--color-white);
+    border: none;
+    width: 100px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+
+    &:hover {
+        text-decoration: none;
+        background-color: var(--color-gray-700);
+        color: var(--color-gray-000);
+    }
+}
+
+.btn-gray {
+    @include button;
+    background-color: var(--color-gray-200);
+    color: var(--white);
+    border: none;
+    width: 100px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+
+    &:hover {
+        text-decoration: none;
+        background-color: var(--color-gray-700);
+        color: var(--color-gray-000);
     }
 }

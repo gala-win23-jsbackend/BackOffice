@@ -7,7 +7,7 @@
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
-<h3>Update Course</h3>
+<h3 class="header-title">Update Course</h3>
 <section class="admincourse">
     <div class="container">
         @if (!string.IsNullOrWhiteSpace(statusMessage))
@@ -88,10 +88,10 @@
                                 <InputText @bind-Value="author.Name" class="form-control" />
                                 <label class="form-label">Author Image</label>
                                 <InputText @bind-Value="author.AuthorImg" class="form-control" />
-                                <button type="button" class="btn-gray btn mt-2" @onclick="() => RemoveAuthor(author)">Remove</button>
+                                <button type="button" class="btn-gray-s btn mt-2" @onclick="() => RemoveAuthor(author)">Remove</button>
                             </div>
                         }
-                        <button class="btn-gray btn" type="button" @onclick="AddAuthor">Add Author</button>
+                        <button class="btn-gray-s btn" type="button" @onclick="AddAuthor">Add Author</button>
 
                     }
                 </div>
@@ -131,7 +131,7 @@
                                 </div>
                             }
                         }
-                        <button class="btn-gray btn" type="button" @onclick="AddProgramDetail">Add Program Detail</button>
+                        <button class="btn-gray-s btn" type="button" @onclick="AddProgramDetail">Add Program Detail</button>
                     </div>
                 </div>
                 <InputText @bind-Value="course.Id" type="text" class="form-control" hidden />

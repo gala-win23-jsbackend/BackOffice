@@ -8,7 +8,7 @@
 
 @attribute [StreamRendering]
 
-<h3>UserAdmin</h3>
+<h3 class="header-title">UserAdmin</h3>
 
 <section class="useradmin">
     <div class="container">
@@ -47,10 +47,10 @@
                             }
 
                             <td>
-                                <a href="@linkUpdate"><button class="btn btn-theme">Update</button></a>
+                                <a href="@linkUpdate"><button class="btn btn-theme-s">Update</button></a>
                                 <EditForm Model="userId" OnValidSubmit="@(() => Delete(userId))" novalidate>
                                     <InputText type="hidden" @bind-Value="userId.Id" />
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-red-s">Delete</button>
                                 </EditForm>
                             </td>
                         </tr>

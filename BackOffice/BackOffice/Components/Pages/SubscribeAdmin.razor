@@ -6,7 +6,7 @@
 
 
 
-<h3>SubscribeAdmin</h3>
+<h3 class="header-title">Subscribe Admin</h3>
 
        @if (!string.IsNullOrWhiteSpace(statusMessage))
 {
@@ -21,15 +21,15 @@
         else
         {
 
-            <h2>Subscribers</h2>
+            
             @foreach (var subscriber in subscribers)
             {
                 var link = $"/update-subscriber/{subscriber.Email}";
                 <div class="subscriber">
                     <h2 class="course-title">@subscriber.Email</h2>
                     <hr />
-                    <a href="@link"><button class="btn btn-theme">Update</button></a>
-                    <button class="btn btn-red" @onclick="() => DeleteSubscriber(subscriber.Email)">Delete</button>
+                    <a href="@link"><button class="btn btn-theme-s">Update</button></a>
+                    <button class="btn btn-red-s" @onclick="() => DeleteSubscriber(subscriber.Email)">Delete</button>
                 </div>
             }
         }
