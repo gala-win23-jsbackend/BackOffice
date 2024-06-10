@@ -59,7 +59,7 @@ public class CourseService(GraphQLHttpClient client)
     }
 
 
-    public async Task<CourseCreate> RequestCreateCourseAsync(Course course)
+    public async Task<CourseCreate> CreateCourseAsync(Course course)
     {
         var request = new GraphQLRequest
         {
@@ -153,7 +153,7 @@ public class CourseService(GraphQLHttpClient client)
         return response.Data.GetCourseById;
     }
 
-    public async Task<Course> RequestUpdateCourseAsync(Course course)
+    public async Task<Course> UpdateCourseAsync(Course course)
     {
         var request = new GraphQLRequest
         {
@@ -234,7 +234,7 @@ public class CourseService(GraphQLHttpClient client)
         }
         return response.Data.UpdateCourse;
     }
-    public async Task<bool> RequestDeleteCourseAsync(string id)
+    public async Task<bool> DeleteCourseAsync(string id)
     {
         var request = new GraphQLRequest
         {

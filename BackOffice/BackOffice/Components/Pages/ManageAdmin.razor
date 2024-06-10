@@ -34,7 +34,7 @@
                                 <InputCheckbox @bind-Value="userAdminForm.IsAdmin" />
                             </div>
                             <div class="mb-3">
-                                <label>CIO</label>
+                                <label>Manager</label>
                                 <InputCheckbox @bind-Value="userAdminForm.IsManager" />
                             </div>
                             <div class="mb-3">
@@ -67,7 +67,9 @@
     {
         try
         {
-            var response = await Http.GetFromJsonAsync<IEnumerable<Models.UsersWithRoles>>("http://localhost:7093/api/GetUsersWithRoles");
+            var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
+
+           // var response = await Http.GetFromJsonAsync<IEnumerable<Models.UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
             if (response != null)
             {
                 userAdminForms = new List<UserAdminForm>();
@@ -98,7 +100,9 @@
 
     public async Task UpdateRoles(UserAdminForm userAdminForm)
     {
-        var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/UpdateUserRoles", userAdminForm);
+                var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/UpdateUserRoles", userAdminForm);
+
+       // var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUserRoles?code=D4jeiujFrsg-YMUM6cPVohMryRijkkI8YCJD8tC-JqnIAzFuDVkajg%3D%3D", userAdminForm);
         if (response.IsSuccessStatusCode)
         {
             StatusMessage = "Roles updated";

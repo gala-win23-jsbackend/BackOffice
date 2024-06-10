@@ -179,7 +179,7 @@
         course.Categories = categories?.Split(',').Select(c => c.Trim()).ToArray();
         course.Content!.Includes = includesText?.Split(',').Select(i => i.Trim()).ToArray();
 
-        var result = await CourseService.RequestUpdateCourseAsync(course);
+        var result = await CourseService.UpdateCourseAsync(course);
         if (result != null)
         {
             statusMessage = "Course updated successfully";

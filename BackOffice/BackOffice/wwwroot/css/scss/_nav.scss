@@ -1,0 +1,14 @@
+.nav-scrollable {
+    .nav-link {
+        span {
+            display: inline-block;
+            position: relative;
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.75rem;
+            top: -6px;
+            background-size: cover;
+            font-size: 1.5rem;
+        }
+    }
+}

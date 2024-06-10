@@ -94,6 +94,8 @@ else
         if (id != null)
         {
             var user = await Http.GetFromJsonAsync<ApplicationUser>($"http://localhost:7093/api/GetOneUser/?id={id}");
+
+            //var user = await Http.GetFromJsonAsync<ApplicationUser>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw%3D%3D/GetOneUser/?id={id}");
             userForm = new UserForm
                 {
                     Id = user!.Id,
@@ -111,7 +113,9 @@ else
 
     private async Task HandleSubmit()
     {
-        var response = await Http.PostAsJsonAsync("http://localhost:7093/api/UpdateUser", userForm);
+                var response = await Http.PostAsJsonAsync("http://localhost:7093/api/UpdateUser", userForm);
+
+        //var response = await Http.PostAsJsonAsync("https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUser?code=lTSU9ifbaSKPfVHoKOZxLVi7MB-zd3Bk4s25pYnKY6qFAzFuT5uzEg%3D%3D", userForm);
         if (response.IsSuccessStatusCode)
         {
             StatusMessage = "User updated successfully";

@@ -123,7 +123,7 @@
     private async Task DeleteCourse(string id)
     {
 
-        var result = await CourseService.RequestDeleteCourseAsync(id);
+        var result = await CourseService.DeleteCourseAsync(id);
         if (result)
             statusMessage = "Course deleted successfully";
         StateHasChanged();
