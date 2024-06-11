@@ -13,10 +13,11 @@
 @inject HttpClient Http
 
 
-<h1>Log in</h1>
 <div class="row">
-    <div class="col-md-4">
-        <section>
+    <div >
+        <section class="login container">
+
+            <h1 class="header-title">Log in</h1>
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
@@ -40,7 +41,7 @@
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="button btn-theme">Log in</button>
                 </div>
                 <div>
                     <p>

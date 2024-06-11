@@ -1,0 +1,7 @@
+.login {
+    margin-left: 2rem;
+
+    @include lg {
+        max-width: 500px;
+    }
+}

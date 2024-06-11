@@ -666,6 +666,31 @@ a:hover {
   margin-bottom: 0;
 }
 
+.login {
+  margin-left: 2rem;
+}
+@media (min-width: 992px) {
+  .login {
+    max-width: 500px;
+  }
+}
+
+.register {
+  margin-left: 2rem;
+  max-width: 500px;
+}
+.register .header-title {
+  text-align: start;
+  margin-left: 220px;
+}
+.register h2 {
+  text-align: center;
+}
+.register form {
+  max-width: 500px;
+  margin-left: 2rem;
+}
+
 footer p {
   font-size: 12px;
   text-align: center;
