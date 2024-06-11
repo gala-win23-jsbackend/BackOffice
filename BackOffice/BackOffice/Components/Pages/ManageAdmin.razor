@@ -3,6 +3,7 @@
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject HttpClient Http
+@inject IConfiguration Configuration
 
 
 
@@ -11,10 +12,16 @@
 
 <section class="ManageAdmin">
     <div class="container">
-        @if (!String.IsNullOrEmpty(StatusMessage))
+
+
+        @if (!string.IsNullOrEmpty(@StatusMessage))
         {
-            <p>@StatusMessage</p>
+            <div class="alert alert-danger" role="alert">
+                @StatusMessage
+            </div>
         }
+
+
 
         @if (userAdminForms != null)
         {
@@ -61,15 +68,16 @@
 
     private List<UserAdminForm> userAdminForms=null!;
 
-    private string StatusMessage { get; set; } = null!;
+    [SupplyParameterFromQuery]
+    public string? StatusMessage { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
+            //var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
 
-           // var response = await Http.GetFromJsonAsync<IEnumerable<Models.UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
+            var response = await Http.GetFromJsonAsync<IEnumerable<Models.UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
             if (response != null)
             {
                 userAdminForms = new List<UserAdminForm>();
@@ -100,9 +108,9 @@
 
     public async Task UpdateRoles(UserAdminForm userAdminForm)
     {
-                var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/UpdateUserRoles", userAdminForm);
+                //var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/UpdateUserRoles", userAdminForm);
 
-       // var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUserRoles?code=D4jeiujFrsg-YMUM6cPVohMryRijkkI8YCJD8tC-JqnIAzFuDVkajg%3D%3D", userAdminForm);
+       var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUserRoles?code=D4jeiujFrsg-YMUM6cPVohMryRijkkI8YCJD8tC-JqnIAzFuDVkajg%3D%3D", userAdminForm);
         if (response.IsSuccessStatusCode)
         {
             StatusMessage = "Roles updated";
@@ -113,9 +121,6 @@
             StatusMessage = "Roles not updated";
         }
     }
-    //Hämta alla users i en lista
-    //Välj i en checkbox vilka roller som ska tilldelas
-    //submit till databasen
-    //Kolla om användaren redan har rollen, om den har det, visa det i en lista
+    
 
 }

@@ -8,10 +8,15 @@
 @rendermode InteractiveServer
 
 <h3 class="header-title">UpdateSubscriber</h3>
-@if (!string.IsNullOrWhiteSpace(StatusMessage))
+
+   @if (!string.IsNullOrEmpty(@StatusMessage))
 {
-    <p>@StatusMessage</p>
+    <div class="alert alert-danger" role="alert">
+        @StatusMessage
+    </div>
 }
+
+
 <section class="newsletter" id="newsletter">
     <div class="container">
         <div class="title">

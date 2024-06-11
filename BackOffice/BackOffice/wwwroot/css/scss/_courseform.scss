@@ -20,7 +20,7 @@
             }
 
             .untouched {
-                background: var(--color-gray-300);
+                background: $gray-300;
             }
 
             .select-form {
@@ -28,7 +28,7 @@
                 text-align: center;
                 width: 80%;
                 margin-bottom: 1rem;
-                border: 1px solid var(--color-gray-300);
+                border: 1px solid $gray-300;
             }
 
             .form-select {
@@ -36,7 +36,7 @@
                 text-align: center;
                 width: 80%;
                 margin-bottom: 1rem;
-                border: 1px solid var(--color-gray-300);
+                border: 1px solid $gray-300;
             }
 
             .checkbox-group {
@@ -91,43 +91,43 @@ form {
     input {
         padding: 1rem;
         border-radius: 8px !important;
-        border: 1px solid var(--color-gray-400) !important;
+        border: 1px solid $gray-400 !important;
 
         &.input-validation-error {
-            border: 2px solid var(--color-danger) !important;
+            border: 2px solid $danger !important;
             border-radius: 0.5rem !important;
-            color: var(--color-danger);
+            color: $danger;
         }
 
         &::placeholder {
-            color: var(--color-gray-400) !important;
+            color: $gray-400 !important;
         }
     }
 
     textarea {
-        height: 200px; 
-        resize: vertical; 
+        height: 200px;
+        resize: vertical;
     }
 }
 
 .form {
-    background-color: var(--color-gray-000);
+    background-color: $white;
     border-radius: 6px;
     font-weight: 700;
-    color: var(--color-gray-900);
+    color: $gray-900;
     margin-top: 2rem;
 
 
     .form-control {
-        background: var(--color-gray-050);
-        border: 1px solid var(--color-gray);
+        background: $gray-100;
+        border: 1px solid $gray-400;
         border-radius: 8px !important;
-        border: 1px solid var(--color-gray-400);
-        color: var(--color-gray-150);
+        border: 1px solid v;
+        color: $gray-500;
         padding: 1rem;
 
         input::placeholder {
-            color: var(--color-gray);
+            color: $gray-400;
         }
 
 
@@ -138,18 +138,18 @@ form {
         }
     }
 
-   
+
 
     .form-select {
-        background: var(--color-gray-050);
-        border: 1px solid var(--color-gray);
-        color: var(--color-gray-150);
+        background: $gray-100;
+        border: 1px solid $gray-400;
+        color: $gray-200;
     }
 
     textarea {
-        background: var(--color-gray-050);
-        border: 1px solid var(--color-gray);
-        color: var(--color-gray-150);
+        background: $gray-100;
+        border: 1px solid $gray-400;
+        color: $gray-100;
     }
 
     span {

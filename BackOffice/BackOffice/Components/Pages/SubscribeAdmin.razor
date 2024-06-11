@@ -8,10 +8,14 @@
 
 <h3 class="header-title">Subscribe Admin</h3>
 
-       @if (!string.IsNullOrWhiteSpace(statusMessage))
+     @if (!string.IsNullOrEmpty(@StatusMessage))
 {
-    <p>@statusMessage</p>
+    <div class="alert alert-danger" role="alert">
+        @StatusMessage
+    </div>
 }
+
+
 <section class="subscribers">
     <div class="container">
         @if (subscribers == null)
@@ -38,7 +42,9 @@
 
 @code {
     [SupplyParameterFromQuery]
-    private string statusMessage { get; set; } =null!;
+    public string? StatusMessage { get; set; } = null!;
+
+
     private List<Subscribersmodel> subscribers = null!;
 
     public class Subscribersmodel
@@ -58,12 +64,12 @@
         var response = await Http.PostAsJsonAsync($"https://newsletters-g.azurewebsites.net/api/DeleteSubscriber?code=iKzIGMAg0iqS05aGHG0DPXcOlzpeKQMSKd9XXzLk5S8XAzFuZ7QvVA%3D%3D", new { Email = email });
         if (response.StatusCode == System.Net.HttpStatusCode.OK)
         {
-            statusMessage = "Subscriber deleted successfully";
+            StatusMessage = "Subscriber deleted successfully";
             StateHasChanged();
         }
         else
         {
-            statusMessage = "Failed to delete subscriber";
+            StatusMessage = "Failed to delete subscriber";
         }
     }
 }

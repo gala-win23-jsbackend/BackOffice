@@ -7,7 +7,7 @@
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
-<h3 class="header-title">Update Course</h3>
+
 <section class="admincourse">
     <div class="container">
         @if (!string.IsNullOrWhiteSpace(statusMessage))
@@ -19,7 +19,7 @@
             <EditForm Model="course" class="courseform form" FormName="updatecourse" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <h2>Update course</h2>
+                <h3 class="header-title">Update Course</h3>
 
 
                 <div class="mb-3">

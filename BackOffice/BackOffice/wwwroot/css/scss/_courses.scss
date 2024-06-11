@@ -18,11 +18,11 @@
 
                 .info {
                     padding: 15px;
-                    background-color: var(--color-gray-000);
-                    border: 0.5px solid var(--color-gray-100);
+                    background-color: $white;
+                    border: 0.5px solid $gray-100;
 
                     .course-title {
-                        color: var(--color-gray-800);
+                        color: $gray-800;
                         margin-bottom: 0;
                     }
 

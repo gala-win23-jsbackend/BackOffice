@@ -12,9 +12,11 @@
 
 <section class="useradmin">
     <div class="container">
-        @if (!String.IsNullOrEmpty(StatusMessage))
+        @if (!string.IsNullOrEmpty(@StatusMessage))
         {
-            <p>@StatusMessage</p>
+            <div class="alert alert-danger" role="alert">
+                @StatusMessage
+            </div>
         }
 
         @if (users != null)
@@ -99,9 +101,9 @@
     {
         try
         {
-             var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
+            // var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
 
-            //var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
+            var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
             if (response != null)
             {
                 users = response;
