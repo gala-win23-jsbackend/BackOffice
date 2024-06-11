@@ -75,9 +75,10 @@
     {
         try
         {
-            //var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
 
             var response = await Http.GetFromJsonAsync<IEnumerable<Models.UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
+            
+           // var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>(Configuration.GetValue<string>("API:GetUsersRoles"));
             if (response != null)
             {
                 userAdminForms = new List<UserAdminForm>();
@@ -108,10 +109,11 @@
 
     public async Task UpdateRoles(UserAdminForm userAdminForm)
     {
-                //var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/UpdateUserRoles", userAdminForm);
 
        var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUserRoles?code=D4jeiujFrsg-YMUM6cPVohMryRijkkI8YCJD8tC-JqnIAzFuDVkajg%3D%3D", userAdminForm);
-        if (response.IsSuccessStatusCode)
+       //var response = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:UpdateUsersRoles"), userAdminForm);
+       
+       if (response.IsSuccessStatusCode)
         {
             StatusMessage = "Roles updated";
             await OnInitializedAsync();

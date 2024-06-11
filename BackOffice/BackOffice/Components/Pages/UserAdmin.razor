@@ -83,9 +83,11 @@
 
     public async Task Delete(UserId userId)
     {
-                var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/DeleteUser", userId);
+               // var response = await Http.PostAsJsonAsync($"http://localhost:7093/api/DeleteUser", userId);
 
-        //var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/DeleteUser?code=tFBR5RPYIlfjKLPZ0D_vZ8SMCu2_fDVKYji8JN6CVIstAzFu1_KPSA%3D%3D/DeleteUser", userId);
+        var response = await Http.PostAsJsonAsync($"https://userprovider-silicon-gala.azurewebsites.net/api/DeleteUser?code=tFBR5RPYIlfjKLPZ0D_vZ8SMCu2_fDVKYji8JN6CVIstAzFu1_KPSA%3D%3D/DeleteUser", userId);
+       //var response = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:DeleteUser"), userId);
+
         if (response.IsSuccessStatusCode)
         {
             StatusMessage = "User deleted";
@@ -104,6 +106,8 @@
             // var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("http://localhost:7093/api/GetUsersRoles");
 
             var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>("https://userprovider-silicon-gala.azurewebsites.net/api/GetUsersRoles?code=UGlx2XkX4mkFrUPEB97YHjVtUQTHMQxXbG9zP17dqY1OAzFuEVUHwQ%3D%3D");
+
+            //var response = await Http.GetFromJsonAsync<IEnumerable<UsersWithRoles>>(Configuration.GetValue<string>("API:GetUsersRoles"));
             if (response != null)
             {
                 users = response;

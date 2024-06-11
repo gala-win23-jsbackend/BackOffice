@@ -77,13 +77,19 @@ else
             <label for="City" class="form-label
                 ">City</label>
         </div>
-        <button type="submit">Update user</button>
+        <button type="submit" class="button btn-theme-s w-25">Update user</button>
     </EditForm>
 
 }
 
 @code {
     private string StatusMessage = null!;
+
+    public UserId userId = new UserId();
+    public class UserId
+    {
+        public string Id { get; set; } = null!;
+    }
 
 
     [SupplyParameterFromForm]
@@ -99,27 +105,36 @@ else
         {
             var user = await Http.GetFromJsonAsync<ApplicationUser>($"http://localhost:7093/api/GetOneUser/?id={id}");
 
-            //var user = await Http.GetFromJsonAsync<ApplicationUser>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw%3D%3D/GetOneUser/?id={id}");
-            userForm = new UserForm
-                {
-                    Id = user!.Id,
-                    PreferredEmail = user.PreferredEmail,
-                    AddressType = user.UserAddress!.AddressType,
-                    AddressLine_1 = user.UserAddress.AddressLine_1,
-                    AddressLine_2 = user.UserAddress.AddressLine_2,
-                    PostCode = user.UserAddress.PostCode,
-                    City = user.UserAddress.City,
-                    FirstName = user.UserProfile!.FirstName,
-                    LastName = user.UserProfile.LastName
-                };
+           //var user = await Http.GetFromJsonAsync<ApplicationUser>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw%3D%3D/?id={userId}");
+            if(user != null)
+            {
+                userForm = new UserForm
+                    {
+                        Id = user!.Id,
+                        PreferredEmail = user.PreferredEmail,
+                        AddressType = user.UserAddress!.AddressType,
+                        AddressLine_1 = user.UserAddress.AddressLine_1,
+                        AddressLine_2 = user.UserAddress.AddressLine_2,
+                        PostCode = user.UserAddress.PostCode,
+                        City = user.UserAddress.City,
+                        FirstName = user.UserProfile!.FirstName,
+                        LastName = user.UserProfile.LastName
+                    };
+            }
+            else
+            {
+                StatusMessage = "Unable to update the user right now. Please try again later.";
+            }
         }
     }
 
     private async Task HandleSubmit()
     {
-                var response = await Http.PostAsJsonAsync("http://localhost:7093/api/UpdateUser", userForm);
+             //   var response = await Http.PostAsJsonAsync("http://localhost:7093/api/UpdateUser", userForm);
 
-        //var response = await Http.PostAsJsonAsync("https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUser?code=lTSU9ifbaSKPfVHoKOZxLVi7MB-zd3Bk4s25pYnKY6qFAzFuT5uzEg%3D%3D", userForm);
+        var response = await Http.PostAsJsonAsync("https://userprovider-silicon-gala.azurewebsites.net/api/UpdateUser?code=lTSU9ifbaSKPfVHoKOZxLVi7MB-zd3Bk4s25pYnKY6qFAzFuT5uzEg%3D%3D", userForm);
+       // var response = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:Update_User"), userForm);
+        
         if (response.IsSuccessStatusCode)
         {
             StatusMessage = "User updated successfully";

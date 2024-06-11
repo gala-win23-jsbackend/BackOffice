@@ -55,6 +55,9 @@
     protected override async Task OnInitializedAsync()
     {
         var getSubscribers = await Http.GetFromJsonAsync<List<Subscribersmodel>>("https://newsletters-g.azurewebsites.net/api/GetSubscribers?code=S_mDFfbPQqWf_l3x6lVBhksqFXgmjrsH_9kP7yvNqNQDAzFuZEPMBw%3D%3D");
+        //var getSubscribers = await Http.GetFromJsonAsync<List<Subscribersmodel>>(Configuration.GetValue<string>("API:GetSubscribers"));
+
+        
         if (getSubscribers != null)
             subscribers = getSubscribers;
 
@@ -62,6 +65,8 @@
     private async Task DeleteSubscriber(string email)
     {
         var response = await Http.PostAsJsonAsync($"https://newsletters-g.azurewebsites.net/api/DeleteSubscriber?code=iKzIGMAg0iqS05aGHG0DPXcOlzpeKQMSKd9XXzLk5S8XAzFuZ7QvVA%3D%3D", new { Email = email });
+        //var response = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:DeleteSubscriber"), new { Email = email });
+        
         if (response.StatusCode == System.Net.HttpStatusCode.OK)
         {
             StatusMessage = "Subscriber deleted successfully";

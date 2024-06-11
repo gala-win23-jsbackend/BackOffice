@@ -86,6 +86,9 @@
         try
         {
             var result = await Http.PostAsJsonAsync("https://newsletters-g.azurewebsites.net/api/UpdateSubscriber?code=X3HK3guioMxQ4f-ZqskJUU9S-MgxtcFNi2AePrwBx-9FAzFu2HkynA%3D%3D", SubscribeForm);
+           
+            //var result = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:Update_Subscriber"), SubscribeForm);
+
             if (result.IsSuccessStatusCode)
                 StatusMessage = "Subscriber was updated!";
             else
@@ -111,7 +114,9 @@
     private async Task GetSubscriber(string email)
     {
         var subscriberRequest = new { Email = email };
-        var response = await Http.PostAsJsonAsync("https://newsletters-g.azurewebsites.net/api/GetOneSubscriber?code=eVeL7ahD3ezO1rBnOEsdrCeaQiFCyUYjrNJsqKWL5e_aAzFuelsCHw%3D%3D", subscriberRequest);
+        //var response = await Http.PostAsJsonAsync("https://newsletters-g.azurewebsites.net/api/GetOneSubscriber?code=eVeL7ahD3ezO1rBnOEsdrCeaQiFCyUYjrNJsqKWL5e_aAzFuelsCHw%3D%3D", subscriberRequest);
+        var response = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GetOneSubscriber"), subscriberRequest);
+
         if (response.IsSuccessStatusCode)
         {
             var subscriber = await response.Content.ReadFromJsonAsync<SubscribeFormModel>();
