@@ -130,8 +130,7 @@
             };
 
 
-        try
-        {
+       
 
             var alreadyExists = await UserManager.FindByEmailAsync(SignUpForm.Email);
             if (alreadyExists != null)
@@ -153,8 +152,8 @@
                 }
 
 
-                RedirectManager.RedirectTo("Account/Login");
-
+               
+                NavigationManager.NavigateTo("Account/Login");
 
 
             }
@@ -163,12 +162,7 @@
                 StatusMessage = "Unable to register account. Please try again.";
                 return;
             }
-        }
-        catch (Exception)
-        {
-            StatusMessage = "An error occured while creating the account.";
-            return;
-        }
+      
 
     }
 }
