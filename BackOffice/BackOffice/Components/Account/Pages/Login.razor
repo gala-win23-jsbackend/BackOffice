@@ -87,7 +87,6 @@
         public string Id { get; set; } = null!;
     }
 
-
     public async Task LoginUser()
     {
 
@@ -96,8 +95,11 @@
        var userRoles = await Http.GetFromJsonAsync<IEnumerable<string>>($"http://localhost:7093/api/GetRolesByUserId?userId={user!.Id}");
 
 
-        //var userRoles = await Http.GetFromJsonAsync<IEnumerable<string>>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetRolesByUserId?code=0Qhcli5wxGgHkkj4kB_k6xXs5voSc2hbfd0tVWDBqtdOAzFuOQcxOw%3D%3DGetRolesByUserId?userId={user!.Id}");
-        
+       // var userRoles = await Http.GetFromJsonAsync<IEnumerable<string>>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetRolesByUserId?code=0Qhcli5wxGgHkkj4kB_k6xXs5voSc2hbfd0tVWDBqtdOAzFuOQcxOw%3D%3D/GetRolesByUserIduserId={user!.Id}");
+        //https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw==
+        //var userRoles = await Http.GetFromJsonAsync<IEnumerable<string>>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw==?userId={user!.Id}");
+
+
         if (userRoles!.Any(role => role == "Admin" || role == "Manager" || role == "SuperAdmin"))
         {
             userIsAdmin = true;

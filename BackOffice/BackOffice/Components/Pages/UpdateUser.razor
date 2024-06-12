@@ -103,9 +103,9 @@ else
 
         if (id != null)
         {
-            //var user = await Http.GetFromJsonAsync<ApplicationUser>($"http://localhost:7093/api/GetOneUser/?id={id}");
+           var user = await Http.GetFromJsonAsync<ApplicationUser>($"http://localhost:7093/api/GetOneUser/?id={id}");
 
-              var user = await Http.GetFromJsonAsync<ApplicationUser>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw%3D%3D?id={id}");
+          //    var user = await Http.GetFromJsonAsync<ApplicationUser>($"https://userprovider-silicon-gala.azurewebsites.net/api/GetOneUser?code=39i1jwWzU7erBYfIowctdFgC_sGX4SdEb0qbN_ZCTQnYAzFuLWQ-qw%3D%3D?id={id}");
             if (user != null)
             {
                 userForm = new UserForm
