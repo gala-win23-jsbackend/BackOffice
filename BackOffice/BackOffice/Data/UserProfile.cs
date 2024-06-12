@@ -7,5 +7,5 @@ public class UserProfile
     public string LastName { get; set; } = null!;
 
     public string? Bio { get; set; }
-    public string? ProfileImage { get; set; }
+    public string? ProfileImage { get; set; } = "https://silicongalastorage.blob.core.windows.net/uploads/avatar.jpg";
 }

@@ -8,10 +8,11 @@ public class ApplicationUser : IdentityUser
     public string? UserProfileId { get; set; }
     public UserProfile? UserProfile { get; set; }
 
-    public DateTime? Created { get; set; }
-    public DateTime? Modified { get; set; }
+    public DateTime? Created { get; set; } = DateTime.Now;
+    public DateTime? Modified { get; set; } = DateTime.Now;
 
     public string? UserAddressId { get; set; }
+    
     public UserAddress? UserAddress { get; set; }
     public string? PreferredEmail { get; set; }
     public bool SubscribeNewsletter { get; set; } = false;

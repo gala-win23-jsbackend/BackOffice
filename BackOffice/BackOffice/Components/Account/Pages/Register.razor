@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using BackOffice.Data
-
+@inject HttpClient Http
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
@@ -22,26 +22,45 @@
 <secton class="register container">
     <h1 class="header-title">Register</h1>
     <div >
-        <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+        @if (!string.IsNullOrEmpty(@StatusMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @StatusMessage
+            </div>
+        }
+        
+        <EditForm Model="SignUpForm" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="signupform">
             <DataAnnotationsValidator />
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <InputText type="text" @bind-Value="SignUpForm.FirstName" class="form-control" autocomplete="givenname" aria-required="true" placeholder="First name" />
+                <label for="password">First name</label>
+                <ValidationMessage For="() => SignUpForm.Password" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText type="text" @bind-Value="SignUpForm.LastName" class="form-control" autocomplete="surname" aria-required="true" placeholder="Last name" />
+                <label for="password">Last name</label>
+                <ValidationMessage For="() => SignUpForm.Password" class="text-danger" />
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="SignUpForm.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+                <ValidationMessage For="() => SignUpForm.Email" class="text-danger" />
             </div>
+            
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <InputText type="password" @bind-Value="SignUpForm.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+                <ValidationMessage For="() => SignUpForm.Password" class="text-danger" />
             </div>
+            
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <InputText type="password" @bind-Value="SignUpForm.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                <ValidationMessage For="() => SignUpForm.ConfirmPassword" class="text-danger" />
             </div>
             <button type="submit" class="button btn-theme">Register</button>
         </EditForm>
@@ -49,77 +68,33 @@
 </secton>
 
 @code {
-    private IEnumerable<IdentityError>? identityErrors;
+   
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromQuery]
+    public string? StatusMessage { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    [SupplyParameterFromForm]
+    public SignUpFormModel SignUpForm { get; set; } = new();
 
-    public async Task RegisterUser(EditContext editContext)
+
+
+    public class SignUpFormModel
     {
-        var user = CreateUser();
+        [DataType(DataType.Text)]
+        [Display(Name = "First Name", Prompt = "Enter your first name", Order = 0)]
+        [Required(ErrorMessage = "First name is required")]
+        [MinLength(2, ErrorMessage = "First name must be at least 2 points")]
+        public string FirstName { get; set; } = null!;
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-        var result = await UserManager.CreateAsync(user, Input.Password);
+        [DataType(DataType.Text)]
+        [Display(Name = "Last Name", Prompt = "Enter your last name", Order = 1)]
+        [Required(ErrorMessage = "Last name is required")]
+        [MinLength(2, ErrorMessage = "Last name must be at least 2 characters long")]
+        public string LastName { get; set; } = null!;
 
-        if (!result.Succeeded)
-        {
-            identityErrors = result.Errors;
-            return;
-        }
-
-        Logger.LogInformation("User created a new account with password.");
-
-        var userId = await UserManager.GetUserIdAsync(user);
-        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-
-        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
-        if (UserManager.Options.SignIn.RequireConfirmedAccount)
-        {
-            RedirectManager.RedirectTo(
-                "Account/RegisterConfirmation",
-                new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
-        }
-
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
-    }
-
-    private ApplicationUser CreateUser()
-    {
-        try
-        {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-        }
-    }
-
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
-    {
-        if (!UserManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
-    }
-
-    private sealed class InputModel
-    {
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -135,5 +110,65 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+    }
+
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = new ApplicationUser
+            {
+                UserProfile = new UserProfile
+                {
+                    FirstName = SignUpForm.FirstName,
+                    LastName = SignUpForm.LastName
+                },
+                UserName = SignUpForm.Email,
+                Email = SignUpForm.Email,
+                EmailConfirmed=true,
+                
+              
+            };
+
+
+        try
+        {
+
+            var alreadyExists = await UserManager.FindByEmailAsync(SignUpForm.Email);
+            if (alreadyExists != null)
+            {
+                StatusMessage = "Email already exists";
+
+                return;
+            }
+
+            var result = await UserManager.CreateAsync(user, SignUpForm.Password);
+            var roleResult = await UserManager.AddToRoleAsync(user, "Manager");
+
+            if (result.Succeeded)
+            {
+                if (!roleResult.Succeeded)
+                {
+                    StatusMessage = "Unable to register roles in account. Please try again.";
+                    return;
+                }
+
+
+                RedirectManager.RedirectTo("/Account/Login");
+
+
+
+            }
+            if (!result.Succeeded)
+            {
+                StatusMessage = "Unable to register account. Please try again.";
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            StatusMessage = "An error occured while creating the account.";
+            return;
+        }
+
     }
 }
