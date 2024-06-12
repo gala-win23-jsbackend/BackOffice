@@ -11,7 +11,7 @@ public class ApplicationUser : IdentityUser
     public DateTime? Created { get; set; } = DateTime.Now;
     public DateTime? Modified { get; set; } = DateTime.Now;
 
-    public string? UserAddressId { get; set; }
+    public int UserAddressId { get; set; }
     
     public UserAddress? UserAddress { get; set; }
     public string? PreferredEmail { get; set; }
